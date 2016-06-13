@@ -39,9 +39,9 @@ public class ClusterInstance {
                     .setPassword("test");
             config.setInstanceName("My instance " + UUID.randomUUID());
 
-            JoinConfig joinConfig = config.getNetworkConfig().getJoin();
-            joinConfig.getMulticastConfig().setEnabled(false);
-            joinConfig.getTcpIpConfig().setEnabled(true).addMember(host);
+//            JoinConfig joinConfig = config.getNetworkConfig().getJoin();
+//            joinConfig.getMulticastConfig().setEnabled(false);
+//            joinConfig.getTcpIpConfig().setEnabled(true).addMember(host);
             synchronized (this) {
                 if (hazelcastInstance == null || !hazelcastInstance.getLifecycleService().isRunning()) {
                     hazelcastInstance = Hazelcast.newHazelcastInstance(config);
