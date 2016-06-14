@@ -22,12 +22,17 @@ public class ClusterInstance {
 
     @Value("${hazelcast.server.host}")
     private String host;
+    @Value("${management.center.base}")
+    private String managementBase;
+    @Value("${management.center.port}")
+    private String managementPort;
+    @Value("${management.center.url}")
+    private String managementUrl;
 
     @PostConstruct
     public void init() {
         System.out.println("<================ Init ====================>");
         memberInstance();
-//        addListners();
     }
 
     public HazelcastInstance memberInstance() {
@@ -42,9 +47,16 @@ public class ClusterInstance {
             JoinConfig joinConfig = config.getNetworkConfig().getJoin();
             joinConfig.getMulticastConfig().setEnabled(false);
             joinConfig.getTcpIpConfig().setEnabled(true).addMember(host);
+
+            config.getManagementCenterConfig()
+                    .setEnabled(true)
+                    .setUpdateInterval(1)
+                    .setUrl(managementBase+":"+managementPort+"/"+managementUrl);
+
             synchronized (this) {
                 if (hazelcastInstance == null || !hazelcastInstance.getLifecycleService().isRunning()) {
                     hazelcastInstance = Hazelcast.newHazelcastInstance(config);
+                    addListners();
                 }
             }
         }
